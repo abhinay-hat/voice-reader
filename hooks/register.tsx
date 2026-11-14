@@ -34,12 +34,13 @@ Rules:
 - If the user asked to explain, describe, or walk through something, explain it conversationally in up to 6 short sentences.
 - Otherwise say only the outcome and anything the user must decide or do, in 1 to 3 short sentences.
 - Never read code, file paths, URLs, commands, tables, or markdown. Say "I changed the hook script", not the path.
-- Plain spoken English. Output only the words to speak.`
+- Plain spoken words in the same language as the written reply. Output only the words to speak.`
 
-type Options = { voice: string; speed: string; model: string; summaryModel: string }
+type Options = { voice: string; speed: string; model: string; summaryModel: string; announce: string }
 type Now = { sid?: string; index?: number; state?: string; paused?: boolean; hb?: number; error?: string }
 
-let opts: Options = { voice: 'af_heart', speed: '1.0', model: 'full', summaryModel: 'haiku' }
+let opts: Options = { voice: 'af_heart', speed: '1.0', model: 'full', summaryModel: 'haiku', announce: 'permission' }
+let prefix = '' // "In checkout-service." when other sessions are active too, so you know who is talking
 let dataDir = ''
 let lastSections = ''
 let generation = 0 // bumped by Stop and by a new prompt: a summary still being written is dropped
@@ -158,9 +159,9 @@ async function play($: EngineInterface, from?: number) {
   const m = await read($, mode)
   if (from === undefined && m !== 'full') {
     if (!(await ensureSummary($, sid, gen))) return
-    await vr($, ['play', sid, 'summary'])
+    await vr($, ['play', sid, 'summary', '0', prefix])
   } else {
-    await vr($, ['play', sid, 'full', String(from ?? 0)])
+    await vr($, ['play', sid, 'full', String(from ?? 0), from ? '' : prefix])
   }
   generation = 0
   await refresh($)
@@ -187,11 +188,17 @@ async function setMode($: EngineInterface, m: Mode) {
 }
 
 // A reply just finished: store it, show its sections, speak it per the mode.
-async function onReply($: EngineInterface, reply: string) {
+function project(cwd: string): string {
+  return cwd.split('/').filter(Boolean).at(-1) ?? ''
+}
+
+async function onReply($: EngineInterface, reply: string, cwd: string) {
   const sid = await $.session.id()
   const msgs = await $.session.messages().catch(() => [])
   const question = [...msgs].reverse().find(m => m.role === 'user' && m.text.trim())?.text ?? ''
-  const saved = q<{ titles?: string[] }>(await vr($, ['save', sid], JSON.stringify({ reply, question })), {})
+  const saved = q<{ titles?: string[]; others_active?: number }>(
+    await vr($, ['save', sid], JSON.stringify({ reply, question })), {})
+  prefix = (saved.others_active ?? 0) > 0 && project(cwd) ? `In ${project(cwd)}.` : ''
   await setSections($, saved.titles ?? [])
   if ((await read($, mode)) !== 'off') await play($)
 }
@@ -205,14 +212,15 @@ export const register: Register = (on, options) => {
     speed: String(o.speed || '1.0'),
     model: o.model === 'int8' ? 'int8' : 'full',
     summaryModel: String(o.summaryModel || 'haiku'),
+    announce: String(o.announce || 'permission'),
   }
 
   on('session.start', async ($, e, next) => {
     await refresh($).catch(() => undefined)
     await $.command.register({
       name: 'speak',
-      description: 'Voice: off | summary | full | play | stop | replay | setup | <n> (from section n); no arg cycles the mode',
-      argumentHint: 'off|summary|full|play|stop|replay|setup|<section number>',
+      description: 'Voice: off | summary | full | play | stop | replay | next | setup | <n> (from section n); no arg cycles the mode',
+      argumentHint: 'off|summary|full|play|stop|replay|next|setup|<section number>',
     })
     void (async () => {
       for (;;) {
@@ -228,11 +236,29 @@ export const register: Register = (on, options) => {
     const done = await next(e)
     const headless = (await $.env.get('CLAUDE_CODE_ENTRYPOINT')) === 'sdk-cli'
     const reply = e.last_assistant_message ?? ''
-    if (!headless && reply.trim()) void onReply($, reply).catch(() => undefined)
+    if (!headless && reply.trim()) void onReply($, reply, e.cwd).catch(() => undefined)
     return done
   })
 
   // A new prompt in this session stops this session's voice (other sessions keep playing).
+  // Claude is waiting on you (a permission prompt, a question, or idle): say so, naming the project.
+  on('classic.Notification', async ($, e, next) => {
+    const done = await next(e)
+    const kind = e.notification_type
+    const wanted =
+      opts.announce !== 'off' &&
+      (kind === 'permission_prompt' || kind === 'elicitation_dialog' ||
+        (kind === 'idle_prompt' && opts.announce === 'permission+idle'))
+    const headless = (await $.env.get('CLAUDE_CODE_ENTRYPOINT')) === 'sdk-cli'
+    if (wanted && !headless && (await read($, mode)) !== 'off') {
+      const where = project(e.cwd)
+      const what =
+        kind === 'idle_prompt' ? 'is waiting for you.' : kind === 'elicitation_dialog' ? 'has a question for you.' : 'needs your approval.'
+      void vr($, ['say', await $.session.id(), `${where || 'Claude'} ${what}`]).catch(() => undefined)
+    }
+    return done
+  })
+
   on('classic.UserPromptSubmit', async ($, e, next) => {
     const state = await read($, player)
     if (state !== 'idle') void stop($).catch(() => undefined)
@@ -259,6 +285,10 @@ export const register: Register = (on, options) => {
       await stop($)
       return { text: 'Voice: stopped' }
     }
+    if (arg === 'next') {
+      await vr($, ['next', await $.session.id()])
+      return { text: 'Voice: next section' }
+    }
     if (arg === 'replay') {
       void play($)
       return { text: 'Voice: replaying' }
@@ -279,7 +309,7 @@ export const register: Register = (on, options) => {
       void play($, i)
       return { text: `Voice: from section ${arg}, ${list[i]}` }
     }
-    return { text: 'Usage: /speak [off|summary|full|play|stop|replay|setup|<section number>]' }
+    return { text: 'Usage: /speak [off|summary|full|play|stop|replay|next|setup|<section number>]' }
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
@@ -291,6 +321,7 @@ export const register: Register = (on, options) => {
     const cur = await read($, active)
     const other = await read($, elsewhere)
     const err = await read($, error)
+    const sid = await $.session.id()
     const live = state !== "idle" && state !== "error"
     const label = state === 'playing' ? 'Pause' : state === 'paused' ? 'Resume' : 'Play'
     const status =
@@ -328,6 +359,9 @@ export const register: Register = (on, options) => {
           <Button key="toggle" label={label} hotkey="p" onPress={() => toggle($)} />
           <Button key="stop" label="Stop" hotkey="s" dimColor onPress={() => stop($)} />
           <Button key="replay" label="Replay" hotkey="r" dimColor onPress={() => play($)} />
+          {live && cur >= 0 && cur < list.length - 1 && (
+            <Button key="next" label="Next" hotkey="n" dimColor onPress={() => vr($, ['next', sid]).then(() => refresh($))} />
+          )}
           {status !== '' && <Text dimColor> {status}{where}</Text>}
         </Box>
         {list.length > 1 && (

@@ -32,6 +32,12 @@ Sections [ 1 Result ][ 2 What changed ][ 3 Why ][ 4 Next steps ][ 5 Part 5 ]
 - **Offline voice**: speech is made on your machine with [Kokoro](https://github.com/thewh1teagle/kokoro-onnx). The voice itself needs no API key and costs nothing.
 - **Nothing is generated twice**: audio is cached, so Replay, Resume and the section buttons start at once.
 - **One bar per session**: each Claude Code window plays only its own reply. If another window is speaking, the bar says so.
+- **Knows who is talking**: with several sessions open, summaries start with the project name ("In checkout-service. Tests pass.").
+- **Tells you when you're needed**: "api-server needs your approval" when a session hits a permission prompt or asks a question, so you can look away.
+- **Listen fast**: up to 2x speed, and Next skips to the following section.
+- **Not just English**: pick a Spanish, French, Hindi, Italian, Portuguese, Japanese or Chinese voice, and summaries come out in the reply's language.
+
+Built for hands-free and eyes-free work: cooking, walking around while a long task runs, reading fatigue, dyslexia, or just preferring to listen.
 
 > **Early access:** the bar uses Claude Code's plugin hooks API, which is still marked early access and may change between releases.
 
@@ -74,11 +80,12 @@ To do it ahead of time, run `/speak setup`.
 | Play / Pause / Resume (`p`) | Pause and resume, also while the next part is still being made. |
 | Stop (`s`) | Stop this session's voice. |
 | Replay (`r`) | Speak this session's latest reply again, in the current mode. |
+| Next (`n`) | Skip to the next section (Full mode). |
 | Sections | Listen from that section to the end. |
 
 Typing a new prompt stops that session's voice. Other sessions keep playing. When a reply finishes in any session, it takes over the speakers.
 
-The same controls work as a command: `/speak off|summary|full|play|stop|replay|setup|<section number>`. `/speak` with nothing after it cycles the mode.
+The same controls work as a command: `/speak off|summary|full|play|stop|replay|next|setup|<section number>`. `/speak` with nothing after it cycles the mode.
 
 ## Settings
 
@@ -86,10 +93,11 @@ Open `/plugin`, choose voice-reader, then Configure:
 
 | Setting | Default | Notes |
 |---|---|---|
-| Voice | `af_heart` | Any Kokoro voice, for example `af_bella`, `am_michael`, `bf_emma`, `bm_george`. |
-| Speed | `1.0` | 0.9 to 1.3. |
+| Voice | `af_heart` | Any Kokoro voice. The first letter sets the language: `a` US English (`af_heart`, `am_michael`), `b` UK English (`bf_emma`, `bm_george`), `e` Spanish (`ef_dora`), `f` French (`ff_siwis`), `h` Hindi (`hf_alpha`), `i` Italian (`if_sara`), `p` Portuguese (`pf_dora`), `j` Japanese, `z` Chinese. |
+| Speed | `1.0` | 0.9 to 2.0. |
 | Model | `full` | `int8` downloads less (92 MB) and runs a little faster, at slightly lower quality. |
 | Summary model | `haiku` | The model that writes the spoken summary. `none` reads the opening sentences instead. |
+| Spoken alerts | `permission` | Say when a session needs approval or has a question. `permission+idle` also speaks when Claude has been waiting a while; `off` never. |
 
 `VOICE_READER_HOME` moves the data folder away from `~/.claude/voice-reader`.
 
@@ -109,6 +117,10 @@ backend/clean.py     turns markdown, tables, links and paths into speakable text
 ```
 
 When a reply finishes, the plugin saves it under the session's id and splits it into sections. Then it starts a background runner. The runner makes audio for each section in order (cached by text) and plays each part as soon as it is ready, while the next is still being made. The bar reads a small status file once a second, so idle polling starts no processes.
+
+## Want to talk back?
+
+voice-reader is about listening. For a two-way voice conversation with Claude Code, use [VoiceMode](https://github.com/mbailey/voicemode).
 
 ## Uninstall
 

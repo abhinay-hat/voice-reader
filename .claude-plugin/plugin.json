@@ -1,6 +1,6 @@
 {
   "name": "voice-reader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Hear Claude's replies: offline Kokoro voice, a summary or the full reply, per-section playback, pause and replay, all from a bar above the prompt",
   "author": {
     "name": "Abhinay Reddy",
@@ -21,19 +21,21 @@
     "voice": {
       "type": "string",
       "title": "Voice",
-      "description": "Kokoro voice id, for example af_heart, af_bella, am_michael, bf_emma, bm_george",
+      "description": "Kokoro voice id. The first letter sets the language: a = US English (af_heart, am_michael), b = UK English (bf_emma, bm_george), e = Spanish (ef_dora), f = French (ff_siwis), h = Hindi (hf_alpha), i = Italian (if_sara), p = Portuguese (pf_dora), j = Japanese, z = Chinese",
       "default": "af_heart"
     },
     "speed": {
       "type": "string",
       "title": "Speed",
-      "description": "Speaking speed",
+      "description": "Speaking speed, up to 2x for audiobook-style listening",
       "options": [
         "0.9",
         "1.0",
         "1.1",
-        "1.2",
-        "1.3"
+        "1.25",
+        "1.5",
+        "1.75",
+        "2.0"
       ],
       "default": "1.0"
     },
@@ -57,6 +59,17 @@
         "none"
       ],
       "default": "haiku"
+    },
+    "announce": {
+      "type": "string",
+      "title": "Spoken alerts",
+      "description": "Say when a session needs you, naming the project: permission prompts and questions, also after Claude has been idle, or never",
+      "options": [
+        "permission",
+        "permission+idle",
+        "off"
+      ],
+      "default": "permission"
     }
   }
 }

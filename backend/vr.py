@@ -5,7 +5,9 @@ Runs on the system python3 (standard library only). The one command that needs K
 
   vr.py save    <sid>          stdin {reply, question}: store the reply, print {hash, titles}
   vr.py summary <sid> <hash>   stdin: the spoken summary of reply <hash>, kept for replays
-  vr.py play    <sid> <kind> [n]  kind summary | full (from section n): start speaking
+  vr.py play    <sid> <kind> [n] [prefix]  kind summary | full (from section n); prefix is said first
+  vr.py say     <sid> <text>   speak one short line now (alerts: "api needs your approval")
+  vr.py next    <sid>          in Full mode, skip to the next section
   vr.py toggle  <sid>          pause or resume this session's audio
   vr.py stop    [sid]          stop the audio (only this session's, when sid is given)
   vr.py setup                  create the virtualenv and download the model now
@@ -31,7 +33,9 @@ NOW, LOCK = os.path.join(HOME, "now.json"), os.path.join(HOME, "now.lock")
 VOICE = os.environ.get("VOICE_READER_VOICE") or "af_heart"
 SPEED = float(os.environ.get("VOICE_READER_SPEED") or 1.0)
 MODEL = "int8" if os.environ.get("VOICE_READER_MODEL") == "int8" else "full"
-LANG = os.environ.get("VOICE_READER_LANG") or "en-us"
+# Kokoro voices start with a language letter: af_heart is American English, ef_dora Spanish...
+VOICE_LANG = {"a": "en-us", "b": "en-gb", "e": "es", "f": "fr-fr", "h": "hi", "i": "it", "j": "ja", "p": "pt-br", "z": "cmn"}
+LANG = os.environ.get("VOICE_READER_LANG") or VOICE_LANG.get(VOICE[:1], "en-us")
 CACHE_DAYS, SESSION_DAYS = 3, 7
 
 RELEASE = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/"
@@ -245,8 +249,11 @@ def start_beat(me):
     threading.Thread(target=beat, daemon=True).start()
 
 
-def items_for(sid, kind, start):
+def items_for(sid, kind, start, prefix=""):
     sd = sdir(sid)
+    if kind == "say":
+        text = clean(jread(os.path.join(sd, "say.json"), {}).get("text", ""))
+        return [(-1, text)] if text.strip() else []
     if kind == "summary":
         reply = jread(os.path.join(sd, "reply.json"), {})
         cached = jread(os.path.join(sd, "summary.json"), {})
@@ -254,13 +261,17 @@ def items_for(sid, kind, start):
             text = clean(cached["text"])
         else:  # no summary made yet: the opening sentences of the reply
             text = " ".join(re.split(r"(?<=[.!?])\s+", clean(reply.get("reply", "")))[:3])[:400]
+        text = f"{prefix} {text}".strip() if prefix else text
         return [(-1, text)] if text.strip() else []
     texts = (jread(os.path.join(sd, "sections.json"), {}) or {}).get("texts") or []
     items = [(i, clean(texts[i], limit=20000)) for i in range(max(start, 0), len(texts))]
-    return [(i, t) for i, t in items if t.strip()]
+    items = [(i, t) for i, t in items if t.strip()]
+    if prefix and items and start <= 0:
+        items[0] = (items[0][0], f"{prefix} {items[0][1]}")
+    return items
 
 
-def run(sid, kind, start):
+def run(sid, kind, start, prefix=""):
     """Detached: hold the speakers, synthesize ahead on one thread, play each part in order."""
     me = os.getpid()
     child = {"p": None}
@@ -295,7 +306,7 @@ def run(sid, kind, start):
         time.sleep(3)
         bye()
 
-    items = items_for(sid, kind, start)
+    items = items_for(sid, kind, start, prefix)
     ready = [threading.Event() for _ in items]
     paths = [None] * len(items)
 
@@ -327,13 +338,13 @@ def run(sid, kind, start):
     bye()
 
 
-def spawn(sid, kind, start=0):
+def spawn(sid, kind, start=0, prefix=""):
     """Start a detached runner inside the virtualenv and hand it the speakers at once."""
     with open(LOCK, "w") as lk:
         lock(lk)
         kill_owner(jread(NOW))
         py = venv_python() if os.path.exists(venv_python()) else sys.executable
-        p = subprocess.Popen([py, os.path.abspath(__file__), "run", sid, kind, str(start)],
+        p = subprocess.Popen([py, os.path.abspath(__file__), "run", sid, kind, str(start), prefix],
                              stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                              start_new_session=True, close_fds=True, env=os.environ.copy())
         jwrite(NOW, {"sid": sid, "runner": p.pid, "player": None, "index": start if kind == "full" else -1,
@@ -354,7 +365,38 @@ def cmd_save(sid):
     titles = [t for t, _ in secs]
     jwrite(os.path.join(sd, "sections.json"), {"hash": h, "titles": titles, "texts": [b for _, b in secs]})
     prune()
-    out({"hash": h, "titles": titles, "spoken": clean(reply)[:2000]})
+    out({"hash": h, "titles": titles, "others_active": others_active(sid)})
+
+
+def others_active(sid, window=3600):
+    """How many other sessions replied within the last hour (then summaries name the project)."""
+    me, n, cutoff = os.path.basename(sdir(sid)), 0, time.time() - window
+    for d in os.listdir(SESS):
+        try:
+            if d != me and os.path.getmtime(os.path.join(SESS, d, "reply.json")) > cutoff:
+                n += 1
+        except OSError:
+            pass
+    return n
+
+
+def cmd_say(sid, text):
+    jwrite(os.path.join(sdir(sid), "say.json"), {"text": text, "ts": time.time()})
+    spawn(sid, "say", 0)
+    out(status(sid))
+
+
+def cmd_next(sid):
+    now = jread(NOW) or {}
+    if status(sid)["state"] != "idle" and now.get("kind") == "full":
+        texts = (jread(os.path.join(sdir(sid), "sections.json"), {}) or {}).get("texts") or []
+        nxt = int(now.get("index", -1)) + 1
+        if nxt < len(texts):
+            spawn(sid, "full", nxt)
+        else:
+            cmd_stop(sid)
+            return
+    out(status(sid))
 
 
 def cmd_summary(sid, h):
@@ -434,16 +476,25 @@ def main():
                     if (jread(NOW) or {}).get("runner") == me:
                         os.remove(NOW)
                 return
-        if os.path.abspath(sys.executable) != os.path.abspath(venv_python()):
-            os.execv(venv_python(), [venv_python(), os.path.abspath(__file__), *a])  # same pid, still the owner
-        run(a[1], a[2], int(a[3]))
+        # Re-launch inside the virtualenv once (same pid, so still the owner). Compare real paths:
+        # a symlinked data folder (macOS /tmp is one) must not cause an exec loop.
+        if (os.path.realpath(sys.executable) != os.path.realpath(venv_python())
+                and not os.environ.get("VOICE_READER_IN_VENV")):
+            os.environ["VOICE_READER_IN_VENV"] = "1"
+            os.execv(venv_python(), [venv_python(), os.path.abspath(__file__), *a])
+        run(a[1], a[2], int(a[3]), a[4] if len(a) > 4 else "")
     elif cmd == "save":
         cmd_save(a[1])
     elif cmd == "summary":
         cmd_summary(a[1], a[2])
     elif cmd == "play":
-        spawn(a[1], a[2] if a[2] in ("summary", "full") else "full", int(a[3]) if len(a) > 3 else 0)
+        spawn(a[1], a[2] if a[2] in ("summary", "full") else "full", int(a[3]) if len(a) > 3 else 0,
+              a[4] if len(a) > 4 else "")
         out(status(a[1]))
+    elif cmd == "say":
+        cmd_say(a[1], " ".join(a[2:]))
+    elif cmd == "next":
+        cmd_next(a[1])
     elif cmd == "toggle":
         cmd_toggle(a[1])
     elif cmd == "stop":
