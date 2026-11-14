@@ -1,0 +1,15 @@
+{
+  "name": "voice-reader",
+  "owner": {
+    "name": "Abhinay Reddy",
+    "url": "https://github.com/abhinay-hat"
+  },
+  "description": "voice-reader: hear Claude Code's replies with an offline Kokoro voice",
+  "plugins": [
+    {
+      "name": "voice-reader",
+      "source": "./",
+      "description": "Hear Claude's replies with an offline Kokoro voice: summary or full reply, per-section playback, pause and replay"
+    }
+  ]
+}

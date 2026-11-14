@@ -1,0 +1,62 @@
+{
+  "name": "voice-reader",
+  "version": "0.1.0",
+  "description": "Hear Claude's replies: offline Kokoro voice, a summary or the full reply, per-section playback, pause and replay, all from a bar above the prompt",
+  "author": {
+    "name": "Abhinay Reddy",
+    "url": "https://github.com/abhinay-hat"
+  },
+  "homepage": "https://github.com/abhinay-hat/voice-reader",
+  "repository": "https://github.com/abhinay-hat/voice-reader",
+  "license": "MIT",
+  "keywords": [
+    "voice",
+    "tts",
+    "kokoro",
+    "accessibility",
+    "audio"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "voice": {
+      "type": "string",
+      "title": "Voice",
+      "description": "Kokoro voice id, for example af_heart, af_bella, am_michael, bf_emma, bm_george",
+      "default": "af_heart"
+    },
+    "speed": {
+      "type": "string",
+      "title": "Speed",
+      "description": "Speaking speed",
+      "options": [
+        "0.9",
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3"
+      ],
+      "default": "1.0"
+    },
+    "model": {
+      "type": "string",
+      "title": "Model",
+      "description": "full (325 MB, best quality) or int8 (92 MB, faster to download)",
+      "options": [
+        "full",
+        "int8"
+      ],
+      "default": "full"
+    },
+    "summaryModel": {
+      "type": "string",
+      "title": "Summary model",
+      "description": "Model that writes the spoken summary (uses your Claude plan). none = read the opening sentences instead",
+      "options": [
+        "haiku",
+        "sonnet",
+        "none"
+      ],
+      "default": "haiku"
+    }
+  }
+}
