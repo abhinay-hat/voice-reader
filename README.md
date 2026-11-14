@@ -57,6 +57,16 @@ Or from a shell:
 claude plugin install voice-reader --marketplace abhinay-hat/voice-reader
 ```
 
+### Command Code
+
+voice-reader also runs in [Command Code](https://commandcode.ai) as a mod, with the same voice, cache and settings:
+
+```
+cmd mods add -g abhinay-hat/voice-reader
+```
+
+Replies are spoken automatically, `/speak` takes the same arguments, and `/speak panel` opens a Voice pane with the mode, play, stop, replay, next and section buttons (Alt plus the letter shown on each). Settings live in the command: `/speak voice bf_emma`, `/speak speed 1.5`, `/speak alerts off`. Headless `cmd -p` runs stay silent.
+
 ### First run
 
 The first reply after installing sets the voice engine up in the background. The bar shows *installing voice engine*, then *downloading voice model*. This happens once:

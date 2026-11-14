@@ -1,6 +1,6 @@
 {
   "name": "voice-reader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Hear Claude's replies: offline Kokoro voice, a summary or the full reply, per-section playback, pause and replay, all from a bar above the prompt",
   "author": {
     "name": "Abhinay Reddy",

@@ -1,0 +1,21 @@
+{
+  "name": "voice-reader",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Hear your coding agent read its replies: offline Kokoro voice, summary or full reply, per-section playback. Claude Code plugin and Command Code mod.",
+  "keywords": [
+    "cmd-mod",
+    "cmd-mod-hook",
+    "cmd-mod-command",
+    "claude-code",
+    "tts",
+    "kokoro"
+  ],
+  "repository": "https://github.com/abhinay-hat/voice-reader",
+  "license": "MIT",
+  "commandcode": {
+    "mods": [
+      "./commandcode/voice-reader.ts"
+    ]
+  }
+}
