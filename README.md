@@ -1,13 +1,30 @@
-# voice-reader
+<p align="center">
+  <img src="assets/banner.svg" alt="voice-reader: a bar above the Claude Code prompt that speaks each reply, with the current section highlighted" width="100%">
+</p>
 
-Hear Claude Code's replies out loud, with a natural offline voice.
+<p align="center">
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2dd4bf?style=flat-square"></a>
+  <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-a78bfa?style=flat-square">
+  <img alt="Offline voice: Kokoro" src="https://img.shields.io/badge/voice-Kokoro%20offline-2dd4bf?style=flat-square">
+  <img alt="macOS and Linux" src="https://img.shields.io/badge/runs%20on-macOS%20%7C%20Linux-6b7685?style=flat-square">
+</p>
 
-A small bar above the prompt lets you choose how each reply is spoken, pause it, replay it, or jump to one section of it:
+<p align="center">
+  <b>Listen to Claude Code instead of reading it.</b><br>
+  A summary or the full reply, read aloud by a natural voice that runs on your machine.<br>
+  <a href="#install">Install</a> · <a href="#use">Use</a> · <a href="#settings">Settings</a> · <a href="#cost-and-privacy">Cost and privacy</a> · <a href="#how-it-works">How it works</a>
+</p>
+
+---
+
+A small bar sits above the prompt. Choose how each reply is spoken, pause it, replay it, or jump to any section:
 
 ```
 Voice [ Off ][ Summary ][ Full ] [ Pause ][ Stop ][ Replay ] speaking · section 2/5
 Sections [ 1 Result ][ 2 What changed ][ 3 Why ][ 4 Next steps ][ 5 Part 5 ]
 ```
+
+## Features
 
 - **Summary**: a short spoken version of the reply, like a colleague's quick verbal update.
 - **Full**: the whole reply, read section by section. The current section is highlighted.

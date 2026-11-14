@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-label="voice-reader: hear Claude Code replies with an offline voice">
+<defs>
+<linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+<radialGradient id="glow" cx="0.82" cy="0.3" r="0.55"><stop offset="0" stop-color="#2dd4bf" stop-opacity="0.18"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></radialGradient>
+<style>
+.w{transform-box:fill-box;transform-origin:center;animation:wave 1.1s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+.s{opacity:0;animation:step 8s infinite}
+@keyframes step{0%,24%{opacity:1}25%,100%{opacity:0}}
+.d1{animation-delay:0s}.d2{animation-delay:2s}.d3{animation-delay:4s}.d4{animation-delay:6s}
+.cur{animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.w,.s,.cur{animation:none}.s.d2{opacity:1}}
+</style></defs>
+<rect width="1200" height="440" rx="18" fill="#0b0f14"/><rect width="1200" height="440" rx="18" fill="url(#glow)"/>
+<text x="64" y="104" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="54" font-weight="700" fill="#e6edf3">voice<tspan fill="url(#g)">-reader</tspan></text>
+<text x="66" y="148" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="23" fill="#6b7685">Hear Claude Code read its replies. Offline Kokoro voice, per-section playback.</text>
+<rect class="w" x="820" y="83.0" width="6" height="18.0" rx="3" fill="url(#g)" style="animation-delay:-0.00s"/>
+<rect class="w" x="832" y="69.76183836218726" width="6" height="44.5" rx="3" fill="url(#g)" style="animation-delay:-0.08s"/>
+<rect class="w" x="844" y="59.89254398638681" width="6" height="64.2" rx="3" fill="url(#g)" style="animation-delay:-0.17s"/>
+<rect class="w" x="856" y="57.16427625422968" width="6" height="69.7" rx="3" fill="url(#g)" style="animation-delay:-0.25s"/>
+<rect class="w" x="868" y="62.550011585202554" width="6" height="58.9" rx="3" fill="url(#g)" style="animation-delay:-0.33s"/>
+<rect class="w" x="880" y="73.8051318275521" width="6" height="36.4" rx="3" fill="url(#g)" style="animation-delay:-0.42s"/>
+<rect class="w" x="892" y="79.47061719343421" width="6" height="25.1" rx="3" fill="url(#g)" style="animation-delay:-0.50s"/>
+<rect class="w" x="904" y="69.8373263593571" width="6" height="44.3" rx="3" fill="url(#g)" style="animation-delay:-0.58s"/>
+<rect class="w" x="916" y="66.08490790194597" width="6" height="51.8" rx="3" fill="url(#g)" style="animation-delay:-0.66s"/>
+<rect class="w" x="928" y="68.28838227328416" width="6" height="47.4" rx="3" fill="url(#g)" style="animation-delay:-0.75s"/>
+<rect class="w" x="940" y="74.21293594066032" width="6" height="35.6" rx="3" fill="url(#g)" style="animation-delay:-0.83s"/>
+<rect class="w" x="952" y="80.71948499397242" width="6" height="22.6" rx="3" fill="url(#g)" style="animation-delay:-0.91s"/>
+<rect class="w" x="964" y="80.65812391639274" width="6" height="22.7" rx="3" fill="url(#g)" style="animation-delay:-1.00s"/>
+<rect class="w" x="976" y="78.79048857641128" width="6" height="26.4" rx="3" fill="url(#g)" style="animation-delay:-1.08s"/>
+<rect class="w" x="988" y="79.05731794158609" width="6" height="25.9" rx="3" fill="url(#g)" style="animation-delay:-0.06s"/>
+<rect class="w" x="1000" y="80.23176740839016" width="6" height="23.5" rx="3" fill="url(#g)" style="animation-delay:-0.15s"/>
+<rect class="w" x="1012" y="81.47562602260889" width="6" height="21.0" rx="3" fill="url(#g)" style="animation-delay:-0.23s"/>
+<rect class="w" x="1024" y="82.78874731154737" width="6" height="18.4" rx="3" fill="url(#g)" style="animation-delay:-0.31s"/>
+<rect class="w" x="1036" y="81.32840217341251" width="6" height="21.3" rx="3" fill="url(#g)" style="animation-delay:-0.39s"/>
+<rect class="w" x="1048" y="78.69167676633953" width="6" height="26.6" rx="3" fill="url(#g)" style="animation-delay:-0.48s"/>
+<rect class="w" x="1060" y="76.0858873767807" width="6" height="31.8" rx="3" fill="url(#g)" style="animation-delay:-0.56s"/>
+<rect class="w" x="1072" y="75.19737225343209" width="6" height="33.6" rx="3" fill="url(#g)" style="animation-delay:-0.64s"/>
+<rect class="w" x="1084" y="77.73446785202883" width="6" height="28.5" rx="3" fill="url(#g)" style="animation-delay:-0.73s"/>
+<rect class="w" x="1096" y="81.79883318483877" width="6" height="20.4" rx="3" fill="url(#g)" style="animation-delay:-0.81s"/>
+<rect class="w" x="1108" y="72.9081621428466" width="6" height="38.2" rx="3" fill="url(#g)" style="animation-delay:-0.89s"/>
+<rect class="w" x="1120" y="64.88267601134882" width="6" height="54.2" rx="3" fill="url(#g)" style="animation-delay:-0.98s"/>
+<rect x="40" y="200" width="1120" height="196" rx="12" fill="#11161d" stroke="#1f2733"/>
+<circle cx="66" cy="224" r="6" fill="#ff5f57"/>
+<circle cx="88" cy="224" r="6" fill="#febc2e"/>
+<circle cx="110" cy="224" r="6" fill="#28c840"/>
+<line x1="40" x2="1160" y1="246" y2="246" stroke="#1f2733"/>
+<text x="64.0" y="284" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">❯</text><text x="88.1" y="284" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#e6edf3"  xml:space="preserve">explain what changed in the auth flow</text>
+<rect class="cur" x="546" y="267" width="11" height="22" fill="#e6edf3" opacity=".8"/>
+<text x="64.0" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">Voice </text>
+<text x="136.2" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ Off ]</text>
+<text x="220.5" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ Summary ]</text>
+<text x="353.0" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">[ Full ]</text>
+<text x="461.3" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#e6edf3"  xml:space="preserve">[ Pause ]</text>
+<text x="569.7" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ Stop ]</text>
+<text x="666.0" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ Replay ]</text>
+<g class="s d1"><text x="798.4" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">speaking · section 1/4</text></g>
+<g class="s d2"><text x="798.4" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">speaking · section 2/4</text></g>
+<g class="s d3"><text x="798.4" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">speaking · section 3/4</text></g>
+<g class="s d4"><text x="798.4" y="328" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">speaking · section 4/4</text></g>
+<text x="64.0" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#6b7685"  xml:space="preserve">Sections </text>
+<g class="s d1"><rect x="168.4" y="347" width="152.5" height="27" rx="6" fill="#2dd4bf" fill-opacity=".14" stroke="#2dd4bf" stroke-opacity=".55"/></g>
+<text x="172.4" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ 1 Result ]</text>
+<g class="s d1"><text x="172.4" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">[ 1 Result ]</text></g>
+<g class="s d2"><rect x="312.8" y="347" width="224.7" height="27" rx="6" fill="#2dd4bf" fill-opacity=".14" stroke="#2dd4bf" stroke-opacity=".55"/></g>
+<text x="316.8" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ 2 What changed ]</text>
+<g class="s d2"><text x="316.8" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">[ 2 What changed ]</text></g>
+<g class="s d3"><rect x="529.6" y="347" width="116.4" height="27" rx="6" fill="#2dd4bf" fill-opacity=".14" stroke="#2dd4bf" stroke-opacity=".55"/></g>
+<text x="533.6" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ 3 Why ]</text>
+<g class="s d3"><text x="533.6" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">[ 3 Why ]</text></g>
+<g class="s d4"><rect x="637.9" y="347" width="200.6" height="27" rx="6" fill="#2dd4bf" fill-opacity=".14" stroke="#2dd4bf" stroke-opacity=".55"/></g>
+<text x="641.9" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#6b7685"  xml:space="preserve">[ 4 Next steps ]</text>
+<g class="s d4"><text x="641.9" y="366" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#2dd4bf"  xml:space="preserve">[ 4 Next steps ]</text></g>
+</svg>
