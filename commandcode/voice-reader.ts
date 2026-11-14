@@ -287,7 +287,7 @@ export default function (cmd: ModApi): void {
 				hotkey: key,
 				onPress: () => setMode(x),
 			});
-			nodes.push(...pack([modeBtn('off', 'o', 'Off'), modeBtn('summary', 's', 'Summary'), modeBtn('full', 'f', 'Full')], w));
+			nodes.push(...pack([modeBtn('off', 'o', 'Off'), modeBtn('summary', 's', 'Summary'), modeBtn('full', 'l', 'Full')], w));
 			const controls: Btn[] = [
 				{type: 'button', key: 'toggle', label, hotkey: 'k', onPress: () => toggle()},
 				{type: 'button', key: 'stop', label: 'Stop', hotkey: 'x', onPress: () => stop()},

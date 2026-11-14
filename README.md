@@ -65,7 +65,7 @@ voice-reader also runs in [Command Code](https://commandcode.ai) as a mod, with 
 cmd mods add -g abhinay-hat/voice-reader
 ```
 
-Replies are spoken automatically, `/speak` takes the same arguments, and `/speak panel` opens a Voice pane with the mode, play, stop, replay, next and section buttons (Alt plus the letter shown on each). Settings live in the command: `/speak voice bf_emma`, `/speak speed 1.5`, `/speak alerts off`. Headless `cmd -p` runs stay silent.
+Replies are spoken automatically, `/speak` takes the same arguments, and `/speak panel` opens a Voice pane with the mode, play, stop, replay, next and section buttons (Alt plus the letter shown on each, for example Alt+l for Full). Settings live in the command: `/speak voice bf_emma`, `/speak speed 1.5`, `/speak alerts off`. Headless `cmd -p` runs stay silent.
 
 ### First run
 
