@@ -241,14 +241,7 @@ export default function (cmd: ModApi): void {
 
 	// ---------- drawing ----------
 
-	cmd.ui.widget({
-		placement: 'below-editor',
-		render: () => {
-			const v = view();
-			const s = statusText(v);
-			return [{type: 'text', text: `voice: ${mode()}${s ? ` · ${s}` : ''}`, dim: true}];
-		},
-	});
+	// One display only: the Voice pane (no second status line under the prompt).
 
 	type Btn = {type: 'button'; label: string; hotkey?: string; key?: string; onPress: () => unknown};
 
@@ -284,9 +277,9 @@ export default function (cmd: ModApi): void {
 			const live = v.state !== 'idle' && v.state !== 'error';
 			const label = v.state === 'playing' ? 'Pause' : v.state === 'paused' ? 'Resume' : 'Play';
 			const s = statusText(v);
-			const nodes: unknown[] = [
-				{type: 'text', text: `${m === 'off' ? 'Off' : m === 'summary' ? 'Summary' : 'Full'}${s ? ` · ${s}` : ''}`, dim: true},
-			];
+			// The ✓ on a mode button already says the mode: the line under the title is only for
+			// what is happening now (speaking, paused, preparing...).
+			const nodes: unknown[] = s ? [{type: 'text', text: s, dim: true}] : [];
 			const modeBtn = (x: Mode, key: string, name: string): Btn => ({
 				type: 'button',
 				key: `mode-${x}`,
